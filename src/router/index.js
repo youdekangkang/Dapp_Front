@@ -7,6 +7,8 @@ import ContactUs from "@/views/ContactUs.vue";
 import AddWallet from "@/views/addWallet.vue";
 import HelpCenter from "@/views/HelpCenter.vue";
 import CreateCollection from "@/views/CreateCollection.vue";
+import AboutPage from "@/views/AboutPage.vue";
+import HomePage from "@/views/HomePage.vue";
 
 const routes = [
     {
@@ -48,7 +50,18 @@ const routes = [
         path: '/create',
         name: 'CreateCollection',
         component: CreateCollection
+    },
+    {
+        path: '/',
+        name: 'HomePage',
+        component: HomePage
+    },
+    {
+        path: '/about',
+        name: 'AboutPage',
+        component: AboutPage
     }
+
 
 ];
 

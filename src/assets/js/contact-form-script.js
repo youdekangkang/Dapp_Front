@@ -18,7 +18,7 @@
         var message = $("#message").val();
         $.ajax({
             type: "POST",
-            url: "assets/php/form-process.php",
+            url: "@/assets/php/form-process.php",
             data: "name=" + name + "&email=" + email + "&msg_subject=" + msg_subject + "&phone_number=" + phone_number + "&message=" + message,
             success: function (text) {
                 if (text == "success") {
