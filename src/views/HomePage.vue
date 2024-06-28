@@ -121,7 +121,9 @@
     </div>
   </div>
 
-  <div class="featured-area pt-100 pb-70">
+
+
+  <div class="featured-area author-area-bg2 pt-4 pb-70">
     <div class="container">
       <div class="tab featured-tab-area">
         <div class="row align-items-center">
@@ -948,37 +950,59 @@
     </div>
   </div>
 
-  <div class="testimonial-area ptb-100">
-    <div class="container">
-      <div class="testimonial-slider owl-theme">
-        <Carousel :autoplay="4000" :wrapAround="true" :pauseAutoplayOnHover="true">
-          <Slide v-for="(opinion, index) in opinions" :key="index">
-            <div class="testimonial-item" >
-              <div class="testimonial-img">
-                <img :src="opinion.image" alt="Images">
-              </div>
 
-              <div class="testimonial-content">
-                <img src="@/assets/images/testimonial/testimonial-line.png" alt="image">
-                <p>{{ opinion.motto }}</p>
-                <ul>
-                  <li>{{opinion.name}}</li>
-                  <li>{{ opinion.position }}</li>
-                </ul>
+  <div class="create-area pt-100 pb-70 ">
+    <div class="container">
+      <div class="section-title text-center">
+        <h2>Create And Sell Your Digital Assets</h2>
+      </div>
+      <div class="row align-items-center pt-45">
+        <div class="col-lg-6">
+          <div class="create-img">
+            <img src="@/assets/images/create/create-img.png" alt="Images">
+          </div>
+        </div>
+        <div class="col-lg-6">
+          <div class="create-card-right pl-20">
+            <div class="row justify-content-center">
+              <div class="col-lg-6 col-6">
+                <div class="create-card">
+                  <img src="@/assets/images/create/create-icon1.png" alt="Images">
+                  <h3><a href="/add-wallet">Set Up Your Wallet</a></h3>
+                  <p>Connect wallet by clicking the wallet icon in the top right corner. Learn about the
+                    wallets  we support.</p>
+                </div>
+              </div>
+              <div class="col-lg-6 col-6">
+                <div class="create-card">
+                  <img src="@/assets/images/create/create-icon3.png" alt="Images">
+                  <h3><a href="/help">Gain digital ownership</a></h3>
+                  <p>Upload your work on a fully decentralized platform and get the ownership code that
+                    belongs to your digital assets alone in the blockchain</p>
+                </div>
+              </div>
+              <div class="col-lg-6 col-6">
+                <div class="create-card">
+                  <img src="@/assets/images/create/create-icon2.png" alt="Images">
+                  <h3><a href="/create"> Upload Your Digital Asset</a></h3>
+                  <p>Upload your work (image, video, audio, or 3D art), add a title and description, and
+                    customize your Digital Assets Auction</p>
+                </div>
+              </div>
+              <div class="col-lg-6 col-6">
+                <div class="create-card">
+                  <img src="@/assets/images/create/create-icon4.png" alt="Images">
+                  <h3><a href="/auction">List Them For Sale</a></h3>
+                  <p>Choose between auctions, fixed-price listings, and declining-price listings. You
+                    choose how you want to sell your NFTs</p>
+                </div>
               </div>
             </div>
-          </Slide>
-
-          <template #addons>
-            <Pagination />
-            <Navigation />
-          </template>
-        </Carousel>
+          </div>
+        </div>
       </div>
     </div>
   </div>
-
-
 
 
   <div class="blog-area pt-100 pb-70">
@@ -1071,8 +1095,35 @@
     </div>
   </div>
 
+  <div class="testimonial-area ptb-100">
+    <div class="container">
+      <div class="testimonial-slider owl-theme">
+        <Carousel :autoplay="4000" :wrapAround="true" :pauseAutoplayOnHover="true">
+          <Slide v-for="(opinion, index) in opinions" :key="index">
+            <div class="testimonial-item" >
+              <div class="testimonial-img">
+                <img :src="opinion.image" alt="Images">
+              </div>
 
+              <div class="testimonial-content">
+                <img src="@/assets/images/testimonial/testimonial-line.png" alt="image">
+                <p style="text-align: center; word-wrap: break-word; white-space: normal;" v-html="opinion.motto"></p>
+                <ul>
+                  <li>{{opinion.name}}</li>
+                  <li>{{ opinion.position }}</li>
+                </ul>
+              </div>
+            </div>
+          </Slide>
 
+          <template #addons>
+            <Pagination />
+            <Navigation />
+          </template>
+        </Carousel>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -1114,25 +1165,23 @@ export default {
       ],
       opinions:[
         {
-          motto:'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Elementum lacus, tempus aliquam turpis\n' +
-              '              diam amet leo enim. Nisi enim lorem condimentum tincidunt ornare nam adipiscing. Volutpat lacus,\n' +
-              '              est hendrerit elit sed interdum.',
+          motto:'海纳百川，有容乃大；壁立千仞，无欲则刚<br>' +
+              'The sea accepts all rivers, that’s why it is so vast; ' +
+              'A wall stands thousand feet high because it is desireless, that’s why it is so strong.',
           name: 'Docter Ding',
           position:'founder',
           image: require('@/assets/images/testimonial/testimonial-img.png')
         },
         {
-          motto:'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Elementum lacus, tempus aliquam turpis\n' +
-              '              diam amet leo enim. Nisi enim lorem condimentum tincidunt ornare nam adipiscing. Volutpat lacus,\n' +
-              '              est hendrerit elit sed interdum.',
+          motto:'长风破浪会有时，直挂云帆济沧海 <br> ' +
+              'Sailing through the waves with the long wind, <br>' +
+              'someday I will set my cloud-piercing sail to cross the vast sea.',
           name: 'Master Lee',
           position:'Initial CEO',
           image: require('@/assets/images/testimonial/testimonial-img2.png')
         },
         {
-          motto:'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Elementum lacus, tempus aliquam turpis\n' +
-              '              diam amet leo enim. Nisi enim lorem condimentum tincidunt ornare nam adipiscing. Volutpat lacus,\n' +
-              '              est hendrerit elit sed interdum.',
+          motto:'Art is the only way to run away without leaving home. It allows us to explore the deepest parts of our soul and express emotions that words cannot capture.',
           name: 'Miao',
           position:'co-founder',
           image: require('@/assets/images/testimonial/testimonial-img3.png')

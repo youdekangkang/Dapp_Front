@@ -5,7 +5,7 @@
         <div class="mobile-responsive-menu">
           <div class="logo">
             <router-link to="/">
-              <img src="@/assets/images/logo-2.png" alt="logo">
+              <img src="@/assets/images/logo-2.png" alt="logo" style="width: auto; height: auto;">
             </router-link>
           </div>
         </div>
@@ -16,7 +16,8 @@
       <div class="container-fluid">
         <nav class="navbar navbar-expand-md navbar-light">
           <router-link class="navbar-brand" to="/">
-            <img src="@/assets/images/logo-2.png" alt="Logo">
+            <img src="@/assets/images/logo-2.png" alt="Logo" style="width: 200px; height: 50px;">
+
           </router-link>
           <div class="nav-widget-form nav-widget-form-bg">
             <form class="search-form">
@@ -75,14 +76,29 @@ export default {
           name: 'Finalization ',
           path: '/final',
         },
+
         {
-          name: 'Contact Us',
-          path: '/contact',
-        },
-        {
-          name: 'Help Center',
-          path: '/help',
-        },
+          name: 'Service',
+          path: '',
+          children:[
+            {
+              name: 'Connect Wallet',
+              path:'/add-wallet'
+            },
+            {
+              name: 'Contact Us',
+              path: '/contact',
+            },
+            {
+              name: 'Help Center',
+              path: '/help',
+            },
+            {
+              name: 'About Us',
+              path: '/about',
+            }
+          ]
+        }
       ]
     };
   }
