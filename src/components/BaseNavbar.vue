@@ -43,7 +43,7 @@
             </ul>
             <div class="others-options">
               <ul class="optional-item-list">
-                <li><a href="/create">Create</a></li>
+                <li><a href="/upload">Create</a></li>
                 <li><a href="/add-wallet" class="active">Connect Wallet</a></li>
               </ul>
             </div>
@@ -96,6 +96,10 @@ export default {
             {
               name: 'About Us',
               path: '/about',
+            },
+            {
+              name: 'My Product',
+              path: '/mine',
             }
           ]
         }

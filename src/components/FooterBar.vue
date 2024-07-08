@@ -151,8 +151,7 @@
       <div class="row align-items-center">
         <div class="col-lg-8">
           <p>
-            © 2021 Tezor. All Rights Reserved by
-            <a href="http://www.bootstrapmb.com" target="_blank">HiBootstrap</a>
+            © 2024 CHETH. All Rights Reserved by HKU Msc.CS 23Fall group.E
           </p>
         </div>
         <div class="col-lg-4">

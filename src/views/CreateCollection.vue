@@ -7,7 +7,6 @@
           <li>
             <a href="index.html">Home</a>
           </li>
-          <li>Pages</li>
           <li>Create Collection</li>
         </ul>
         <div class="inner-shape">

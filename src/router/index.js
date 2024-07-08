@@ -9,6 +9,8 @@ import HelpCenter from "@/views/HelpCenter.vue";
 import CreateCollection from "@/views/CreateCollection.vue";
 import AboutPage from "@/views/AboutPage.vue";
 import HomePage from "@/views/HomePage.vue";
+import FileUpload from "@/views/FileUpload.vue";
+import myProduct from "@/views/MyProduct.vue";
 
 const routes = [
     {
@@ -60,6 +62,16 @@ const routes = [
         path: '/about',
         name: 'AboutPage',
         component: AboutPage
+    },
+    {
+        path: '/upload',
+        name: 'FileUpload',
+        component: FileUpload
+    },
+    {
+        path: '/mine',
+        name: 'myProduct',
+        component: myProduct
     }
 
 
