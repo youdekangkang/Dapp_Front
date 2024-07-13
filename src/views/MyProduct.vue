@@ -18,6 +18,7 @@
         </div>
       </div>
     </div>
+
   </div>
 
   <div class="auctions-area-three pt-100 pb-70">
@@ -30,15 +31,18 @@
         <div v-for="asset in assets" :key="asset.name" class="col-lg-4 col-md-6">
           <div class="auction-card">
             <div class="auction-card-img">
-              <img :src="asset.imageUrl"  alt="Product Image" width="370" height="360">
+              <router-link :to="{name:'ReleaseSale',query:{name:asset.name,id:asset.id,date:asset.creationTime,assetStatus:asset.assetStatus}}">
+                <img :src="asset.imageUrl"  alt="Product Image" width="370" height="360">
+              </router-link>
             </div>
             <div class="content">
-              <h3>{{ asset.name }}</h3>
-
+              <h3><router-link :to="{name:'ReleaseSale',query:{name:asset.name,id:asset.id,date:asset.creationTime,assetStatus:asset.assetStatus}}">{{ asset.name }}</router-link></h3>
               <div class="auction-card-content">
                 <div class="card-left">
                   <span>Creation Time</span>
-                  <h4>{{ asset.creationTime }} ETH</h4>
+                  <h4>{{ asset.creationTime }}</h4>
+                  <span>Asset Status</span>
+                  <h4>{{ asset.assetStatus }}</h4>
                 </div>
               </div>
             </div>
@@ -81,16 +85,13 @@ export default {
     }
   },
   mounted() {
-    // 如果已经有 Web3App 实例，则直接获取用户资产
     if (this.web3App) {
       console.log("getting user products...")
       this.fetchUserAssets();
     }
-    // 监听钱包连接事件
     EventBus.on('wallet-connected', this.fetchUserAssets);
   },
   beforeUnmount() {
-    // 移除事件监听器
     EventBus.off('wallet-connected', this.fetchUserAssets);
   }
 }

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <button @click="connectMetaMask">Connect MetaMask</button>
+    <a @click="connectMetaMask" class="active">Connect MetaMask</a>
     <p v-if="account">Connected account: {{ account }}</p>
     <p v-if="error" style="color: red;">Error: {{ error }}</p>
   </div>
@@ -57,7 +57,7 @@ export default {
           // 触发事件通知其他组件
           EventBus.emit('wallet-connected', this.account);
 
-          console.log("Connect to wallet successfully!")
+          alert("Connect to wallet："+ this.account +" successfully!");
 
         } catch (error) {
           console.error("Error connecting to MetaMask:", error);

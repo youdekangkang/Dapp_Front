@@ -10,7 +10,8 @@ import CreateCollection from "@/views/CreateCollection.vue";
 import AboutPage from "@/views/AboutPage.vue";
 import HomePage from "@/views/HomePage.vue";
 import FileUpload from "@/views/FileUpload.vue";
-import myProduct from "@/views/MyProduct.vue";
+import MyProduct from "@/views/MyProduct.vue";
+import ReleaseSale from "@/views/ReleaseSale.vue";
 
 const routes = [
     {
@@ -70,8 +71,13 @@ const routes = [
     },
     {
         path: '/mine',
-        name: 'myProduct',
-        component: myProduct
+        name: 'MyProduct',
+        component: MyProduct
+    },
+    {
+        path: '/release',
+        name: 'ReleaseSale',
+        component: ReleaseSale
     }
 
 

@@ -11,6 +11,7 @@ import { AppOfEthers } from './ofetherjs.js';
 import { Appfunction } from './function.js';
 import {providers} from "web3";
 
+
 $(document).ready(function () {
     var reader;
     // 照片选择
@@ -86,35 +87,15 @@ $(document).ready(function () {
     // 释放给卖家
     $("#release-funds").click(function () {
         let productId = new URLSearchParams(window.location.search).get('product-id');
-        $("#msg").html("Your transaction has been submitted. Please wait for few seconds for the confirmation").show();
+        console.log("Your transaction has been submitted. Please wait for few seconds for the confirmation").show();
         AppOfWeb3.releaseFunds(productId);
     });
 
     // 回退给买家
     $("#refund-funds").click(function () {
         let productId = new URLSearchParams(window.location.search).get('product-id');
-        $("#msg").html("Your transaction has been submitted. Please wait for few seconds for the confirmation").show();
+        console.log("Your transaction has been submitted. Please wait for few seconds for the confirmation").show();
         AppOfWeb3.refundFunds(productId);
         alert("refund the funds!");
     });
 });
-
-// window.web3.AppOfWeb3 = AppOfWeb3;
-// window.web3.AppOfEthers = AppOfEthers;
-//
-// // web3初始化
-// window.addEventListener("load", function () {
-//     if (window.ethereum) {
-//         AppOfWeb3.web3 = new Web3(window.ethereum);
-//         AppOfEthers.provider = new ethers.providers.Web3Provider(window.ethereum);
-//         // AppOfEthers.provider = new providers.web3ProvidersMapUpdated(window.ethereum)
-//         AppOfEthers.singer = AppOfEthers.provider.getSigner();
-//         window.ethereum.enable();
-//     } else {
-//         AppOfWeb3.web3 = new Web3(new Web3.providers.HttpProvider("http://127.0.0.1:8545"));
-//         AppOfEthers.provider = new ethers.providers.JsonRpcProvider();
-//         AppOfEthers.singer = AppOfEthers.provider.getSigner();
-//     }
-//     AppOfWeb3.start();
-//     AppOfEthers.start();
-// });

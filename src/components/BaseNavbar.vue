@@ -44,7 +44,8 @@
             <div class="others-options">
               <ul class="optional-item-list">
                 <li><a href="/upload">Create</a></li>
-                <li><a href="/add-wallet" class="active">Connect Wallet</a></li>
+<!--                <li><a href="/add-wallet" class="active">Connect Wallet</a></li>-->
+                <li><meta-mask-connector/></li>
               </ul>
             </div>
           </div>
@@ -55,7 +56,11 @@
 </template>
 
 <script>
+import metaMaskConnector from "@/components/MetaMaskConnector.vue";
 export default {
+  components:{
+    metaMaskConnector
+  },
   name: 'BaseNavbar',
   data() {
     return {
@@ -110,14 +115,13 @@ export default {
 </script>
 
 <style scoped>
-/* 样式块：导航栏按钮 */
 .navbar-nav .nav-item .nav-link {
-  color: #000; /* 默认字体颜色 */
-  transition: color 0.3s ease; /* 平滑过渡效果 */
+  color: #000;
+  transition: color 0.3s ease;
 }
 
-/* 鼠标悬停时字体颜色变更 */
+
 .navbar-nav .nav-item .nav-link:hover {
-  color: #EF1D3C; /* 鼠标悬停时的字体颜色 */
+  color: #EF1D3C;
 }
 </style>

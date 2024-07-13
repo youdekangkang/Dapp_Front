@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-undef */
 
-import $ from 'jquery';
+// import $ from 'jquery';
 import { create } from 'ipfs-http-client';
 import { Buffer } from 'buffer';
 
@@ -124,13 +124,12 @@ class Fun {
 
     // 添加商品信息到数据库
     this.saveProduct = function saveProduct(product) {
-      var data = {
+      let data = {
         blockchainId: product._productId, name: product._name, category: product._category,
-        ipfsImageHash: product._imageLink, ipfsDescHash: product._descLink, auctionStartTime: product._auctionStartTime,
-        auctionEndTime: product._auctionEndTime, price: product._startPrice, condition: product._productCondition,
-        productStatus: 0
+        ipfsImageHash: product._imageId, ipfsDescHash: product._descLink, auctionStartTime: product._auctionStartTime,
+        auctionEndTime: product._auctionEndTime, price: product._startPrice, productStatus: 0
       };
-      var product_ = JSON.stringify(data);
+      let product_ = JSON.stringify(data);
       $.ajax({
         type: 'POST',
         url: '/product/saveProduct',
@@ -138,6 +137,27 @@ class Fun {
         data: product_
       });
     };
+
+    // this.saveProductNew = function saveProductNew(product, descId, start, end) {
+    //   var data = {
+    //     name: product['product_name'],
+    //     category: product['product_category'],
+    //     ipfsImageHash: product['asset-hash'],
+    //     ipfsDescHash: descId,
+    //     auctionStartTime: start,
+    //     auctionEndTime: end,
+    //     price: product['product_startPrice'],
+    //     productStatus: 0
+    //   };
+    //   var product_ = JSON.stringify(data);
+    //   $.ajax({
+    //     type: 'POST',
+    //     url: '/product/saveProduct',
+    //     contentType: 'application/json;charset=UTF-8',
+    //     data: product_  // 使用转换后的 JSON 字符串
+    //   });
+    // };
+
 
 /*    // 添加商品信息到数据库
     this.saveToProduct = function saveToProduct(product) {

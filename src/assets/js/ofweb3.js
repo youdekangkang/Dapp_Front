@@ -5,12 +5,9 @@ import Fun from './function.js';
 import ecommerce_store_artifacts from '../build/contracts/EcommerceStore.json';
 import asset_manager_artifacts from '../build/contracts/AssetManager.json';
 
-
-
-import $ from 'jquery';
 import Web3 from 'web3';
 import { create } from 'ipfs-http-client';
-const ipfs = create({ host: 'localhost', port: '5001', protocol: 'http' });
+// const ipfs = create({ host: 'localhost', port: '5001', protocol: 'http' });
 // const web3 = new Web3(Web3.givenProvider || 'http://localhost:8545');
 
 // 你的其他代码
@@ -68,39 +65,55 @@ export const AppOfWeb3 = {
   },
 
   buildAsset: async function (assetId) {
-    const { getAssetName, getAssetCreationTime } = this.EcommerceStore.methods;
+    const { getAssetName, getAssetCreationTime,getSaleStatus } = this.EcommerceStore.methods;
     let assetName = await getAssetName(assetId).call();
     let creationTime = await getAssetCreationTime(assetId).call();
+    let asset_status = await getSaleStatus(assetId).call();
+    asset_status = parseInt(asset_status);
+    let asset_status_str;
+    console.log(asset_status)
+    if (asset_status === 0){
+      asset_status_str = "Not Selling";
+    }else{
+      asset_status_str = "Selling";
+    }
     creationTime = Number(creationTime);
     return {
       id: assetId,
       name: assetName,
       creationTime: new Date(creationTime * 1000).toLocaleString(),
-      imageUrl: `http://localhost:9001/ipfs/${assetId}`
+      imageUrl: `http://localhost:9001/ipfs/${assetId}`,
+      assetStatus: asset_status_str
     };
   },
 
   // buildAsset: async function(userAssets) {
   //   const {getAssetName} = this.EcommerceStore.methods;
   //   const {getAssetCreationTime} = this.EcommerceStore.methods;
-  //   let node = $("<div/>");
-  //   node.addClass("col-sm-3 text-center col-margin-bottom-1");
-  //   node.append("<a><img src='http://localhost:9001/ipfs/" + userAssets + "' width='150px' height='100px'/></a>");
+  //   const {getSaleStatus} = this.EcommerceStore.methods;
+  //
   //   let asset_name = await getAssetName(userAssets).call()
   //   let creation_time = await getAssetCreationTime(userAssets).call()
-  //   creation_time = Number(creation_time);
-  //   // console.log(typeof creation_time)
-  //   // console.log(creation_time)
-  //   node.append("<div>" + asset_name + "</div>");
+  //   let asset_status = await getSaleStatus(userAssets).call()
+  //   let asset_status_str;
   //
+  //   if (asset_status === '0'){
+  //     asset_status_str = "Not Selling";
+  //   }else{
+  //     asset_status_str = "Selling";
+  //   }
+  //
+  //   let node = $("<div/>");
+  //   node.addClass("col-sm-3 text-center col-margin-bottom-1");
+  //   node.append("<a>< img src='http://localhost:9001/ipfs/" + userAssets + "' width='150px' height='100px'/></a >");
+  //   node.append("<div>" + asset_name + "</div>");
   //   node.append("<div>" + new Date(creation_time * 1000).toLocaleString() + "</div>");
+  //   node.append("<div>" + asset_status_str + "</div>");
   //   return node;
   // },
 
   getAssetNameAndImageHash: async function(){
-    $("#product-name").empty();
-    const {getAssets} = this.EcommerceStore.methods;
-    const {getAssetName} = this.EcommerceStore.methods;
+    const {getAssets,getAssetName} = this.EcommerceStore.methods;
 
     var userAssets = await getAssets(this.account).call();
 
@@ -116,13 +129,39 @@ export const AppOfWeb3 = {
 
   },
 
+  // updateAssetHash: async function() {
+  //   const {getAssets} = this.EcommerceStore.methods;
+  //   const {getAssetName} = this.EcommerceStore.methods;
+  //
+  //   var userAssets = await getAssets(this.account).call();
+  //   var productNameSelect = document.getElementById('product-name');
+  //   var selectedAssetHashInput = document.getElementById('asset-hash');
+  //
+  //   var selectName = productNameSelect.value;
+  //
+  //
+  //   if (selectName) {
+  //     for (let i = 0; i < userAssets.length; i++) {
+  //       var assetName = await getAssetName(userAssets[i]).call();
+  //       if (assetName === selectName){
+  //         selectedAssetHashInput.value = userAssets[i];
+  //       }else{
+  //         console.log("what can i say, man?")
+  //       }
+  //     }
+  //   } else {
+  //     selectedAssetHashInput.value = 'Not found your asset';
+  //   }
+  // },
+
   updateAssetHash: async function() {
-    const {getAssets} = this.EcommerceStore.methods;
-    const {getAssetName} = this.EcommerceStore.methods;
+    const {getAssets,getAssetName,getSaleStatus} = this.EcommerceStore.methods;
+
     var userAssets = await getAssets(this.account).call();
+    let assetStatus;
     var productNameSelect = document.getElementById('product-name');
     var selectedAssetHashInput = document.getElementById('asset-hash');
-
+    var selectedAssetStatus = document.getElementById('asset-status');
     var selectName = productNameSelect.value;
 
 
@@ -130,9 +169,15 @@ export const AppOfWeb3 = {
       for (let i = 0; i < userAssets.length; i++) {
         var assetName = await getAssetName(userAssets[i]).call();
         if (assetName === selectName){
+          assetStatus = await getSaleStatus(userAssets[i]).call();
+          if (assetStatus === 0){
+            assetStatus = "Not Selling";
+          }else{
+            assetStatus = "Selling";
+          }
+          selectedAssetStatus.value = assetStatus;
           selectedAssetHashInput.value = userAssets[i];
-        }else{
-          console.log("what can i say, man?")
+          break;
         }
       }
     } else {
@@ -141,21 +186,17 @@ export const AppOfWeb3 = {
   },
 
 
-
-
-
-// 添加商品
   saveProduct: async function (reader, decodedParams) {
-    let imageId, descId;
+    if (decodedParams["asset-status"] === 'Selling'){
+      alert("Product is selling, Do not submit repeatedly")
+      return;
+    }
+    let descId;
     let that = this;
-
-    //that.fun.saveImageOnIpfs(reader).then(function (id) {
-    // imageId = id;
     that.fun.saveTextBlobOnIpfs(decodedParams["product-description"]).then(function (id) {
       descId = id;
       AppOfWeb3.saveProductToBlockchain(decodedParams, descId);
     })
-//    })
   },
 
   // 添加商品不拍卖
@@ -164,8 +205,6 @@ export const AppOfWeb3 = {
     let that = this;
     that.fun.saveImageOnIpfs(reader).then(function (id) {
       imageId = id;
-      //that.fun.saveTextBlobOnIpfs(decodedParams["product-description"]).then(function (id) {
-      // descId = id;
       console.log(imageId,decodedParams);
       AppOfWeb3.saveProductToBlockchainWithoutAuction(imageId, decodedParams);
     })
@@ -179,59 +218,73 @@ export const AppOfWeb3 = {
     const { addProductToStore } = this.EcommerceStore.methods;
     await addProductToStore(params["product-name"], params["product-category"], params["asset-hash"], descId, auctionStartTime,
         auctionEndTime, params["product-price"])
-        .send({ from: this.account, gas: 999999 }).then(console.log);
-    $("#msg").show();
-    $("#msg").html("Your product was successfully added to your store!");
+        .send({ from: this.account, gas: 999999,
+          gasPrice: Web3.utils.toWei('10', 'gwei')}).then(console.log);
+    // let that = this;
+    console.log(params);
+    // await that.fun.saveProductNew(params,descId,auctionStartTime,auctionEndTime);
+    alert("Your product was successfully added to your store!");
+    // location.assign("/mine");
   },
 
   // 添加商品到区块链不竞拍
   saveProductToBlockchainWithoutAuction: async function (imageId, params) {
-    console.log(this.EcommerceStore)
     const { addAsset } = this.EcommerceStore.methods;
 
     await addAsset(imageId, params["productName"])
         .send({ from: this.account, gas: 999999,
           gasPrice: Web3.utils.toWei('10', 'gwei')}).then(console.log);
-    $("#msg").show();
-    $("#msg").html("Your product was successfully added to your store!");
+    alert("Your product was successfully added to your store!");
+    location.assign("/");
   },
 
-  // 商品详情
-  renderProductDetails: async function (productId) {
+  //获取商品状态
+  getProductInfo: async function (productId) {
     const { getProduct } = this.EcommerceStore.methods;
-    await getProduct(productId).call().then(res => {
-      let content = "";
-      content = ipfs.cat(res[4]);
-      content.next().then(res => $("#product-desc").append("<div>" + this.fun.Utf8ArrayToStr(res.value) + "</div>"));
-      $("#product-image").append("<img src='http://localhost:9001/ipfs/" + res[3] + "' width='250px' />");
-      $("#product-price").html(res[7] + "ETH");
-      $("#product-name").html(res[1]);
-      $("#product-auction-end").html(this.fun.displayEndHours(res[6]));
-      $("#revealing, #bidding, #finalize-auction, #escrow-info").hide();
-      $("#product-id").val(res[0]);
-      let currentTime = Math.round(new Date() / 1000);
-      if (res[8] == 1) {
-        $("#escrow-info").show();
-        this.highestBidder(productId);
-        this.escrowData(productId);
-      } else if (res[8] == 2) {
-        $("#product-status").html("Product was not sold");
-      } else if (currentTime < res[6]) {
-        $("#bidding").show();
-      } else if (currentTime - (200) < res[6]) {
-        $("#revealing").show();
-      } else {
-        $("#finalize-auction").show();
-      }
-    })
+    const res = await getProduct(productId).call();
+    return res;
   },
+
+
+  // 商品详情
+  // renderProductDetails: async function (productId) {
+  //   const { getProduct } = this.EcommerceStore.methods;
+  //   await getProduct(productId).call().then(res => {
+  //     console.log(productId,typeof productId);
+  //     return res;
+  //     let content = ipfs.cat(res[4]);
+  //     content.next().then(res => $("#product-desc").append("<div>" + this.fun.Utf8ArrayToStr(res.value) + "</div>"));
+  //     $("#product-image").append("<img src='http://localhost:9001/ipfs/" + res[3] + "' width='250px' />");
+  //     $("#product-price").html(res[7] + "ETH");
+  //     $("#product-name").html(res[1]);
+  //     $("#product-auction-end").html(this.fun.displayEndHours(res[6]));
+  //     $("#revealing, #bidding, #finalize-auction, #escrow-info").hide();
+  //     $("#product-id").val(res[0]);
+  //     let currentTime = Math.round(new Date() / 1000);
+
+  //     if (res[8] == 1) {
+  //       $("#escrow-info").show();
+  //       this.highestBidder(productId);
+  //       this.escrowData(productId);
+  //     } else if (res[8] == 2) {
+  //       $("#product-status").html("Product was not sold");
+  //     } else if (currentTime < res[6]) {
+  //       $("#bidding").show();
+  //     } else if (currentTime - (200) < res[6]) {
+  //       $("#revealing").show();
+  //     } else {
+  //       $("#finalize-auction").show();
+  //     }
+
+  //   })
+  // },
 
   // 出价
   bidProduct: async function (productId, sealedBid, sendAmount) {
     const { bid } = this.EcommerceStore.methods;
-    await bid(productId, sealedBid).send({ value: this.web3.utils.toWei(sendAmount, 'ether'), from: this.account}).then(res => {
-      $("#msg").html("Your bid has been successfully submitted!");
-      $("#msg").show();
+    await bid(productId, sealedBid).send({ value: this.web3.utils.toWei(sendAmount, 'ether'), from: this.account,
+                                        gasPrice: Web3.utils.toWei('10', 'gwei')}).then(res => {
+      alert("Your bid has been successfully submitted!");
       console.log(res);
     })
   },
@@ -240,9 +293,9 @@ export const AppOfWeb3 = {
   revealProduct: async function (productId, amount, secretText) {
     const { revealBid } = this.EcommerceStore.methods;
     let amounts = this.web3.utils.toWei(amount, 'ether');
-    await revealBid(productId, amounts, secretText).send({ from: this.account}).then(res => {
-      $("#msg").show();
-      $("#msg").html("Your bid has been successfully revealed!");
+    await revealBid(productId, amounts, secretText).send({ from: this.account,
+                                                        gasPrice: Web3.utils.toWei('10', 'gwei')}).then(res => {
+      alert("Your bid has been successfully revealed!");
       console.log(res);
     })
   },
@@ -251,15 +304,15 @@ export const AppOfWeb3 = {
   finalizeProduct: async function (productId) {
     console.log(productId);
     const { finalizeAuction } = this.EcommerceStore.methods;
-    await finalizeAuction(productId).send({ from: this.account}).then(res => {
-      $("#msg").show();
-      $("#msg").html("The auction has been finalized and winner declared.");
+    await finalizeAuction(productId).send({ from: this.account,
+                                        gasPrice: Web3.utils.toWei('10', 'gwei')}).then(res => {
+
+      alert("The auction has been finalized and winner declared.");
       console.log(res);
       location.reload();
     }).catch(err => {
       console.log(err);
-      $("#msg").show();
-      $("#msg").html("The auction can not be finalized by the buyer or seller, only a third party aribiter can finalize it");
+      alert("The auction can not be finalized by the buyer or seller, only a third party aribiter can finalize it");
     })
   },
 
@@ -268,11 +321,11 @@ export const AppOfWeb3 = {
     const { highestBidderInfo } = this.EcommerceStore.methods;
     await highestBidderInfo(productId).call().then(res => {
       if (res[2].toLocaleString() == '0') {
-        $("#product-status").html("Auction has ended. No bids were revealed");
+        return "Auction has ended. No bids were revealed"
       } else {
-        $("#product-status").html("Auction has ended. Product sold to " + res[0] + " for Ξ:" + this.web3.utils.fromWei(res[2], 'ether') +
+        return "Auction has ended. Product sold to " + res[0] + " for Ξ:" + this.web3.utils.fromWei(res[2], 'ether') +
             "The money is in the escrow. Two of the three participants (Buyer, Seller and Arbiter) have to " +
-            "either release the funds to seller or refund the money to the buyer");
+            "either release the funds to seller or refund the money to the buyer"
       }
     })
   },
@@ -281,33 +334,38 @@ export const AppOfWeb3 = {
   escrowData: async function (productId) {
     const { escrowInfo } = this.EcommerceStore.methods;
     await escrowInfo(productId).call().then(res => {
-      $("#buyer").html('Buyer: ' + res[0]);
-      $("#seller").html('Seller: ' + res[1]);
-      $("#arbiter").html('Arbiter: ' + res[2]);
+      let buyer = 'Buyer: ' + res[0];
+      let seller = 'Seller: ' + res[1];
+      let arbiter = 'Arbiter: ' + res[2];
+      let releaseCount = '';
+      let refundCount = '';
       if (res[3] == true) {
-        $("#release-count").html("Amount from the escrow has been released");
+        releaseCount = "Amount from the escrow has been released";
       } else {
-        $("#release-count").html(res[4] + " of 3 participants have agreed to release funds");
-        $("#refund-count").html(res[5] + " of 3 participants have agreed to refund the buyer");
+        releaseCount =  res[4] + " of 3 participants have agreed to release funds";
+        refundCount = res[5] + " of 3 participants have agreed to refund the buyer";
       }
+      return [buyer,seller,arbiter,releaseCount,refundCount];
     })
   },
 
   // 释放给卖家
   releaseFunds: async function (productId) {
     const { releaseAmountToSeller } = this.EcommerceStore.methods;
-    await releaseAmountToSeller(productId).send({ from: this.account}).then(res => {
+    await releaseAmountToSeller(productId).send({ from: this.account, gasPrice: Web3.utils.toWei('10', 'gwei')}).then(res => {
       console.log(res);
       location.reload();
+      return res;
     }).catch(err => { console.log(err) });
   },
 
   // 回退给买家
   refundFunds: async function (productId) {
     const { refundAmountToBuyer } = this.EcommerceStore.methods;
-    await refundAmountToBuyer(productId).send({ from: this.account}).then(res => {
+    await refundAmountToBuyer(productId).send({ from: this.account, gasPrice: Web3.utils.toWei('10', 'gwei')}).then(res => {
       console.log(res);
       location.reload();
+      return res;
     }).catch(err => { console.log(err) });
   },
 
@@ -331,7 +389,22 @@ export const AppOfWeb3 = {
         return;
       }
       var product = result.returnValues;
-      that.fun.saveProduct(product);
+      // that.fun.saveProduct(product);
+      console.log("saving to database now...")
+      let data = {
+        blockchainId: product._productId, name: product._name, category: product._category,
+        ipfsImageHash: product._imageId, ipfsDescHash: product._descLink, auctionStartTime: product._auctionStartTime,
+        auctionEndTime: product._auctionEndTime, price: product._startPrice, productStatus: 0
+      };
+      let product_ = JSON.stringify(data);
+      $.ajax({
+        type: 'POST',
+        url: '/product/saveProduct',
+        contentType: 'application/json;charset=UTF-8',
+        data: product_
+      });
+
+
     });
   },
 
