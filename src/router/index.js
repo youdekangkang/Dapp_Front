@@ -30,7 +30,7 @@ const routes = [
         component: FinalPage
     },
     {
-        path: '/product/:blockchainId',
+        path: '/product/:id',
         name: 'ProductDetails',
         component: ProductDetails
     },

@@ -44,8 +44,7 @@
             <div class="others-options">
               <ul class="optional-item-list">
                 <li><a href="/upload">Create</a></li>
-<!--                <li><a href="/add-wallet" class="active">Connect Wallet</a></li>-->
-                <li><meta-mask-connector/></li>
+                <li><a href="/add-wallet" class="active">Connect Wallet</a></li>
               </ul>
             </div>
           </div>
@@ -56,11 +55,7 @@
 </template>
 
 <script>
-import metaMaskConnector from "@/components/MetaMaskConnector.vue";
 export default {
-  components:{
-    metaMaskConnector
-  },
   name: 'BaseNavbar',
   data() {
     return {
@@ -102,9 +97,24 @@ export default {
               name: 'About Us',
               path: '/about',
             },
+
+          ]
+        },
+        {
+          name: 'Upload',
+          path:'',
+          children:[
             {
-              name: 'My Product',
+              name: 'Find My Assets',
               path: '/mine',
+            },
+            {
+              name: 'Upload Assets',
+              path: '/mine',
+            },
+            {
+              name: 'Release Directly',
+              path: '/create',
             }
           ]
         }

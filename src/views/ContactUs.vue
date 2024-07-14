@@ -5,8 +5,9 @@
         <h3>Contact Us</h3>
         <ul>
           <li>
-            <a href="index.html">Home</a>
+            <a href="/">Home</a>
           </li>
+          <li>Service</li>
           <li>Contact Us</li>
         </ul>
         <div class="inner-shape">

@@ -5,7 +5,7 @@
         <h3>Item Details</h3>
         <ul>
           <li>
-            <a href="index.html">Home</a>
+            <a href="/">Home</a>
           </li>
           <li>Trading</li>
           <li>Item Details</li>
@@ -25,7 +25,7 @@
           <div class="col-lg-7">
             <div class="item-details-left-side pr-20">
               <div class="item-details-img">
-                <img :src="'http://localhost:9001/ipfs/' + product.ipfsImageHash" alt="Images">
+                <img :src="'http://localhost:9001/ipfs/' + product.imageId" alt="Images">
                 <span><i class="ri-heart-line"></i>0</span>
               </div>
             </div>
@@ -33,13 +33,13 @@
           <div class="col-lg-5">
             <div class="item-details-dsce">
               <div class="section-title">
-                <h2>{{product.productName}}</h2>
+                <h2>{{product.name}}</h2>
                 <p v-if="productDescription">{{ productDescription }}</p>
               </div>
 
               <div class="item-details-price">
                 <div class="item-details-title">
-                  <h3>Start Price: {{product.price}} ETH</h3>
+                  <h3>Start Price: {{product.startPrice}} ETH</h3>
                 </div>
                 <ul>
                   <li>
@@ -70,13 +70,17 @@
 
 
                 <div id="escrow-info" style="display: none">
-                  <div id="buyer">{{buyer}}</div>
-                  <div id="seller">{{seller}}</div>
-                  <div id="arbiter">{{arbiter}}</div>
-                  <div id="release-count">{{releaseCount}}</div>
-                  <div id="refund-count">{{refundCount}}</div>
-                  <a class="btn form-submit" @click="releaseFunds">Release Amount to Seller</a>
-                  <a class="btn form-submit" @click="refundFunds">Refund Amount to Buyer</a>
+                  <ul id="resultDisplay" style="display: none">
+                    <li id="buyer">Buyer: <b>{{ buyer }}</b></li>
+                    <li id="seller">Seller: <b>{{ seller }}</b></li>
+                    <li id="arbiter">Arbiter: <b>{{ arbiter }}</b></li>
+                  </ul>
+                  <div id="processDisplay" style="display: none">
+                    <div id="release-count">{{ releaseCount }} participants have agreed to release funds</div>
+                    <div id="refund-count">{{ refundCount }} participants have agreed to refund the buyer</div>
+                    <a class="default-btn border-radius-50" @click="releaseFunds">Release Amount to Seller</a>
+                    <a class="default-btn border-radius-50" @click="refundFunds">Refund Amount to Buyer</a>
+                  </div>
                 </div>
 
                 <form id="bidding" class="col-sm-4" @submit.prevent = "submitForm1" style="display: none">
@@ -124,7 +128,7 @@
                   </div>
                 </form>
 
-                <div id="product-status">{{productStatus}}</div>
+                <div id="product-status" style="display: none">Product was not sold</div>
 
 
               </div>
@@ -150,7 +154,6 @@ export default {
   },
   data() {
     return {
-      productStatus:'',
       product: null,
       productDescription:'',
       auctionStartTime: null,
@@ -187,7 +190,7 @@ export default {
       let amount = this.form1.bidAmount.toString();
       let sendAmount = this.form1.bidSendAmount.toString();
       let secretText = this.form1.secretText.toString();
-      let productId = this.$route.params.blockchainId;
+      let productId = this.$route.params.id;
       try {
         if (!this.web3App) {
           throw new Error("Web3App is not initialized");
@@ -204,7 +207,7 @@ export default {
 
     },
     async submitForm2() {
-      let productId = this.$route.params.blockchainId;
+      let productId = this.$route.params.id;
       let amount = this.form2.actualAmount.toString();
       let secretText = this.form2.revealSecretText.toString();
       try {
@@ -219,7 +222,7 @@ export default {
 
     },
     async submitForm3() {
-      let productId = this.$route.params.blockchainId;
+      let productId = this.$route.params.id;
       try {
         if (!this.web3App) {
           throw new Error("Web3App is not initialized");
@@ -231,27 +234,29 @@ export default {
       }
     },
     releaseFunds() {
-      let productId = this.$route.params.blockchainId;
+      let productId = this.$route.params.id;
       alert("Your transaction has been submitted. Please wait for few seconds for the confirmation");
       this.web3App.releaseFunds(productId);
     },
     refundFunds() {
-      let productId = this.$route.params.blockchainId;
+      let productId = this.$route.params.id;
       alert("Your transaction has been submitted. Please wait for few seconds for the confirmation");
       this.web3App.refundFunds(productId);
       alert("refund the funds!");
     },
     fetchProductDetails() {
-      const blockchainId = this.$route.params.blockchainId;
-      fetch(`http://localhost:80/product/${blockchainId}`)
+      const blockchainId = this.$route.params.id;
+      console.log(blockchainId);
+      fetch(`http://localhost:80/transaction/${blockchainId}`)
           .then(response => response.json())
           .then(data => {
             this.product = data;
+            console.log(this.product)
             this.auctionStartTime = data.auctionStartTime;
             this.auctionEndTime = data.auctionEndTime;
-            return fetch(`http://localhost:9001/ipfs/${data.ipfsDescHash}`);
+            return fetch(`http://localhost:9001/ipfs/${data.descLink}`);
           })
-          .then(response => response.text()) // 假设IPFS返回的是纯文本内容
+          .then(response => response.text())
           .then(descriptionText => {
             this.productDescription = descriptionText;
           })
@@ -264,7 +269,7 @@ export default {
     },
     updateCountdown() {
       const now = Date.now();
-      const end = this.auctionEndTime * 1000; // 转换为毫秒
+      const end = this.auctionEndTime * 1000;
       const distance = end - now;
 
       if (distance < 0) {
@@ -283,11 +288,14 @@ export default {
       this.timer = setInterval(this.updateCountdown, 1000);
     },
     async getInfo() {
-      let bidding = document.getElementById("bidding");
-      let revealing = document.getElementById("revealing");
-      let finalizeAuction = document.getElementById("finalize-auction");
-      let escorwInfo = document.getElementById("escrow-info");
-      let button1 = document.getElementById("bid");
+      var bidding = document.getElementById("bidding");
+      var revealing = document.getElementById("revealing");
+      var finalizeAuction = document.getElementById("finalize-auction");
+      var escorwInfo = document.getElementById("escrow-info");
+      var transactionStatus = document.getElementById("product-status");
+      var button1 = document.getElementById("bid");
+      var resultDisplay = document.getElementById("resultDisplay");
+      var processDisplay = document.getElementById("processDisplay");
 
       try {
         if (!this.web3App) {
@@ -295,19 +303,30 @@ export default {
           throw new Error("Web3App is not initialized");
         }
         button1.style.display = "none";
-        let res = await this.web3App.getProductInfo(this.$route.params.blockchainId);
+        let res = await this.web3App.getTransactionInfoInfo(this.$route.params.id);
         console.log(res);
         let currentTime = Math.round(new Date() / 1000);
 
         if (res[8] == 1) {
           escorwInfo.style.display = "block";
-          this.productStatus = await this.web3App.highestBidder(this.$route.params.blockchainId);
-          let res = await this.web3App.escrowData(this.$route.params.blockchainId);
-          this.buyer = res[0];this.seller=res[1];this.arbiter=res[2];this.releaseCount=res[3];this.refundCount=res[4];
+          await this.web3App.highestBidder(this.$route.params.id);
+          let res = await this.web3App.escrowData(this.$route.params.id);
+          console.log(res);
+          this.buyer = res[0];
+          this.seller = res[1];
+          this.arbiter = res[2];
+          let isAuctionOver = res[3];
+          this.releaseCount = res[4];
+          this.refundCount = res[5];
+
+          if (isAuctionOver == true){
+            resultDisplay.style.display = 'block';
+          }else {
+            processDisplay.style.display = 'block';
+          }
 
         } else if (res[8] == 2) {
-          // productStatus.style.display = "block";
-          this.productStatus = "Product was not sold";
+          transactionStatus.style.display = "block";
         } else if (currentTime < res[6]) {
           bidding.style.display = "block";
         } else if (currentTime - (200) < res[6]) {

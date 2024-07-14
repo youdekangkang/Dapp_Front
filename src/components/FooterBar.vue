@@ -5,7 +5,7 @@
         <div class="col-lg-4 col-sm-8">
           <div class="footer-widget">
             <div class="footer-logo">
-              <a href="index.html">
+              <a href="/">
                 <img src="@/assets/images/footer-logo.png" alt="Footer Logo">
               </a>
             </div>
@@ -27,23 +27,23 @@
             <h3>Marketplace</h3>
             <ul class="footer-list">
               <li>
-                <a href="discover-1.html" target="_blank">
-                  Art
+                <a href="/create" target="_blank">
+                  Upload
                 </a>
               </li>
               <li>
-                <a href="discover-1.html" target="_blank">
-                  All NFTs
+                <a href="/auction" target="_blank">
+                  Auction
                 </a>
               </li>
               <li>
-                <a href="discover-1.html" target="_blank">
-                  Music
+                <a href="/reveal" target="_blank">
+                  Reveal
                 </a>
               </li>
               <li>
-                <a href="discover-1.html" target="_blank">
-                  Trending Cards
+                <a href="/final" target="_blank">
+                  Finalize
                 </a>
               </li>
             </ul>
@@ -54,22 +54,22 @@
             <h3>My Account</h3>
             <ul class="footer-list">
               <li>
-                <a href="authors.html" target="_blank">
+                <a href="/mine" target="_blank">
                   Authors
                 </a>
               </li>
               <li>
-                <a href="collection.html" target="_blank">
-                  Collection
+                <a href="/mine" target="_blank">
+                  Mine Collection
                 </a>
               </li>
               <li>
-                <a href="author-profile.html" target="_blank">
-                  Author Profile
+                <a href="/" target="_blank">
+                  Profile
                 </a>
               </li>
               <li>
-                <a href="create-collection.html" target="_blank">
+                <a href="/create" target="_blank">
                   Create Collection
                 </a>
               </li>
@@ -81,22 +81,22 @@
             <h3>Resources</h3>
             <ul class="footer-list">
               <li>
-                <a href="help-center.html" target="_blank">
+                <a href="/help" target="_blank">
                   Helps & Support
                 </a>
               </li>
               <li>
-                <a href="auction.html" target="_blank">
+                <a href="/auction" target="_blank">
                   Live Auctions
                 </a>
               </li>
               <li>
-                <a href="item-details.html" target="_blank">
+                <a href="/reveal" target="_blank">
                   Item Details
                 </a>
               </li>
               <li>
-                <a href="activity.html" target="_blank">
+                <a href="/final" target="_blank">
                   Activity
                 </a>
               </li>
@@ -108,22 +108,22 @@
             <h3>Company</h3>
             <ul class="footer-list">
               <li>
-                <a href="about.html" target="_blank">
+                <a href="/about" target="_blank">
                   About Us
                 </a>
               </li>
               <li>
-                <a href="contact.html" target="_blank">
+                <a href="/contact" target="_blank">
                   Contact Us
                 </a>
               </li>
               <li>
-                <a href="blog-1.html" target="_blank">
+                <a href="/" target="_blank">
                   Our Blog
                 </a>
               </li>
               <li>
-                <a href="discover-1.html" target="_blank">
+                <a href="/" target="_blank">
                   Discover
                 </a>
               </li>

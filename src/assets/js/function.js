@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-undef */
 
-// import $ from 'jquery';
+import $ from 'jquery';
 import { create } from 'ipfs-http-client';
 import { Buffer } from 'buffer';
 
@@ -17,15 +17,15 @@ class Fun {
       const categories = ["Art", "Books", "Cameras", "Cell Phones & Accessories", "Clothing", "Computers & Tablets", "Gift Cards & Coupons", "Musical Instruments & Gear", "Pet Supplies", "Pottery & Glass", "Sporting Goods", "Tickets", "Toys & Hobbies", "Video Games"];
       this.renderProducts("product-list", {});
 
-      this.renderProducts("product-reveal-list", { productStatus: "reveal" });
-      this.renderProducts("product-finalize-list", { productStatus: "finalize" });
+      this.renderProducts("product-reveal-list", { transactionStatus: "reveal" });
+      this.renderProducts("product-finalize-list", { transactionStatus: "finalize" });
     };
 
     // 
     this.renderProducts = function renderProducts(div, filter) {
       $.ajax({
         type: 'GET',
-        url: '/product/allProduct',
+        url: '/transaction/allTransaction',
         contentType: 'application/json;charset=UTF-8',
         data: filter,
         success: function (data) {
@@ -124,47 +124,41 @@ class Fun {
 
     // 添加商品信息到数据库
     this.saveProduct = function saveProduct(product) {
-      let data = {
+      var data = {
         blockchainId: product._productId, name: product._name, category: product._category,
         ipfsImageHash: product._imageId, ipfsDescHash: product._descLink, auctionStartTime: product._auctionStartTime,
-        auctionEndTime: product._auctionEndTime, price: product._startPrice, productStatus: 0
+        auctionEndTime: product._auctionEndTime, price: product._startPrice, transactionStatus: 0
       };
-      let product_ = JSON.stringify(data);
+      var product_ = JSON.stringify(data);
       $.ajax({
         type: 'POST',
-        url: '/product/saveProduct',
+        url: 'http://localhost:80/product/saveProduct',
         contentType: 'application/json;charset=UTF-8',
         data: product_
       });
     };
 
-    // this.saveProductNew = function saveProductNew(product, descId, start, end) {
-    //   var data = {
-    //     name: product['product_name'],
-    //     category: product['product_category'],
-    //     ipfsImageHash: product['asset-hash'],
-    //     ipfsDescHash: descId,
-    //     auctionStartTime: start,
-    //     auctionEndTime: end,
-    //     price: product['product_startPrice'],
-    //     productStatus: 0
-    //   };
-    //   var product_ = JSON.stringify(data);
-    //   $.ajax({
-    //     type: 'POST',
-    //     url: '/product/saveProduct',
-    //     contentType: 'application/json;charset=UTF-8',
-    //     data: product_  // 使用转换后的 JSON 字符串
-    //   });
-    // };
-
+    this.saveProductNew = function saveProductNew(product,descId,start,end,blockChainID) {
+      var data = {
+        id: blockChainID, name: product['product-name'], category: product['product-category'],
+        imageId: product['asset-hash'], descLink: descId, auctionStartTime: start,
+        auctionEndTime: end, startPrice: product['product-price'], status: 0
+      };
+      var product_ = JSON.stringify(data);
+      $.ajax({
+        type: 'POST',
+        url: 'http://localhost:80/transaction/saveTransaction',
+        contentType: 'application/json;charset=UTF-8',
+        data: product_
+      });
+    };
 
 /*    // 添加商品信息到数据库
     this.saveToProduct = function saveToProduct(product) {
       var data = {
         blockchainId: product._productId, name: product._name,
         ipfsImageHash: product._imageLink, ipfsDescHash: product._descLink,
-        productStatus: 0
+        transactionStatus: 0
       };
       var product_ = JSON.stringify(data);
       $.ajax({

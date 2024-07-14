@@ -6,7 +6,7 @@
         <h3>Auction Final Stage</h3>
         <ul>
           <li>
-            <a href="index.html">Home</a>
+            <a href="/">Home</a>
           </li>
           <li>Trading</li>
           <li>Auction Final</li>
@@ -25,11 +25,11 @@
         <h2>Auction Final</h2>
       </div>
       <div class="row justify-content-center pt-45">
-        <div v-for="product in products" :key="product.blockchainId" class="col-lg-4 col-md-6">
+        <div v-for="product in products" :key="product.id" class="col-lg-4 col-md-6">
           <div class="auction-card">
             <div class="auction-card-img">
-              <a :href="'/product/' + product.blockchainId">
-                <img :src="'http://localhost:9001/ipfs/' + product.ipfsImageHash"  alt="Product Image" width="370" height="360">
+              <a :href="'/product/' + product.id">
+                <img :src="'http://localhost:9001/ipfs/' + product.imageId"  alt="Product Image" width="370" height="360">
               </a>
               <div class="auction-card-into">
                 <h3>Remaining Time</h3>
@@ -39,15 +39,15 @@
               </div>
             </div>
             <div class="content">
-              <h3><a :href="'/product/' + product.blockchainId">{{ product.productName }}</a></h3>
+              <h3><a :href="'/product/' + product.id">{{ product.name }}</a></h3>
 
               <div class="auction-card-content">
                 <div class="card-left">
                   <span>Final Bid</span>
-                  <h4>{{ product.price }} ETH</h4>
+                  <h4>{{ product.startPrice }} ETH</h4>
                 </div>
               </div>
-              <a :href="'/product/' + product.blockchainId" class="place-btn">chech info</a>
+              <a :href="'/product/' + product.id" class="place-btn">chech info</a>
             </div>
           </div>
         </div>
@@ -72,7 +72,7 @@ export default {
   },
   methods: {
     fetchProducts() {
-      fetch('http://localhost:80/product/allProduct?productStatus=finalize')
+      fetch('http://localhost:80/transaction/allTransaction?status=finalize')
           .then(response => response.json())
           .then(data => {
             this.products = data.map(product => ({

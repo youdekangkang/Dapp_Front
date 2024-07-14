@@ -1,3 +1,6 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable no-undef */
+
 <template>
   <div id="app">
     <MetaMaskConnector />
@@ -13,6 +16,8 @@ import BaseNavbar from "@/components/BaseNavbar.vue";
 import FooterBar from "@/components/FooterBar.vue";
 
 
+
+
 export default {
   name: 'App',
   components: {
@@ -21,6 +26,7 @@ export default {
     MetaMaskConnector
   }
 }
+
 </script>
 
 <style>

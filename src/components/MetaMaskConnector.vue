@@ -1,6 +1,6 @@
 <template>
   <div>
-    <a @click="connectMetaMask" class="active">Connect MetaMask</a>
+    <button @click="connectMetaMask">Connect MetaMask</button>
     <p v-if="account">Connected account: {{ account }}</p>
     <p v-if="error" style="color: red;">Error: {{ error }}</p>
   </div>
@@ -29,6 +29,8 @@ export default {
     async connectMetaMask() {
       if (window.ethereum) {
         try {
+
+
           // 请求 MetaMask 账户访问权限
           await window.ethereum.request({ method: 'eth_requestAccounts' });
           // 创建 provider 和 signer
@@ -57,7 +59,7 @@ export default {
           // 触发事件通知其他组件
           EventBus.emit('wallet-connected', this.account);
 
-          alert("Connect to wallet："+ this.account +" successfully!");
+          console.log("Connect to wallet successfully!")
 
         } catch (error) {
           console.error("Error connecting to MetaMask:", error);

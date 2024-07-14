@@ -5,8 +5,9 @@
         <h3>Release Your Products for Auction</h3>
         <ul>
           <li>
-            <a href="index.html">Home</a>
+            <a href="/">Home</a>
           </li>
+          <li>Trading</li>
           <li>Release Sale</li>
         </ul>
         <div class="inner-shape">
@@ -187,7 +188,6 @@ export default {
 
       try {
         if (!this.web3App) {
-          alert("Web3App is not initialized");
           throw new Error("Web3App is not initialized");
         }
         const formData = this.form;
@@ -199,9 +199,7 @@ export default {
         });
         await this.web3App.saveProduct(this.reader, decodedParams);
         console.log("Successfully Create Auction!");
-        // location.assign('/mine');
       } catch (error) {
-        alert(error);
         console.error("Error submitting form:", error);
       }
     }

@@ -11,8 +11,9 @@
           <div class="banner-content-two">
             <h1>Collect Digital Assets From Our Creative & Rare Auction Community</h1>
             <p>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed aliquam etiam rhoncus aenean a
-              iaculis aliquet accumsan sodales consectetur.
+              In our blockchain-based Dapp, upload to a fully decentralized trading platform,
+              receive a dedicated hash number dedicated to your digital work,
+              and transfer the copyright of the work through an auction.
             </p>
             <div class="banner-btn">
               <a href="/about" class="default-btn border-radius-5">Explore More</a>
@@ -997,97 +998,6 @@
                     choose how you want to sell your NFTs</p>
                 </div>
               </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-
-  <div class="blog-area pt-100 pb-70">
-    <div class="container">
-      <div class="row align-items-center">
-        <div class="col-lg-8 col-md-8">
-          <div class="section-title">
-            <h2>From Our Blog</h2>
-          </div>
-        </div>
-        <div class="col-lg-4 col-md-4">
-          <div class="blog-btn text-end">
-            <a href="/" class="default-btn border-radius-5">Explore More</a>
-          </div>
-        </div>
-      </div>
-      <div class="row justify-content-center pt-45">
-        <div class="col-lg-4 col-md-6">
-          <div class="blog-card">
-            <div class="blog-img">
-              <a href="/">
-                <img src="@/assets/images/blog/blog-img1.jpg" alt="Images">
-              </a>
-              <div class="blog-user">
-                <a href="" class="blog-user-option">
-                  <img src="@/assets/images/featured/featured-user2.jpg" alt="Images">
-                  <span>Created by @Adison</span>
-                </a>
-              </div>
-              <a href="" class="blog-tag-btn">Artwork</a>
-            </div>
-            <div class="content">
-              <h3><a href="">Announcing Our $100m Raise, Led By A16z</a></h3>
-              <ul>
-                <li>June 5, 2021</li>
-                <li>No Comments</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-        <div class="col-lg-4 col-md-6">
-          <div class="blog-card">
-            <div class="blog-img">
-              <a href="/">
-                <img src="@/assets/images/blog/blog-img2.jpg" alt="Images">
-              </a>
-              <div class="blog-user">
-                <a href="/" class="blog-user-option">
-                  <img src="@/assets/images/featured/featured-user2.jpg" alt="Images">
-                  <span>Created by @Evelyn</span>
-                </a>
-              </div>
-              <a href="/" class="blog-tag-btn">Digital</a>
-            </div>
-            <div class="content">
-              <h3><a href="/">Edition365: A Portrait Of The Year That Changed Everything</a>
-              </h3>
-              <ul>
-                <li>June 7, 2021</li>
-                <li>02 Comments</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-        <div class="col-lg-4 col-md-6">
-          <div class="blog-card">
-            <div class="blog-img">
-              <a href="/">
-                <img src="@/assets/images/blog/blog-img3.jpg" alt="Images">
-              </a>
-              <div class="blog-user">
-                <a href="/" class="blog-user-option">
-                  <img src="@/assets/images/featured/featured-user3.jpg" alt="Images">
-                  <span>Created by @Julian</span>
-                </a>
-              </div>
-              <a href="/" class="blog-tag-btn">Creative</a>
-            </div>
-            <div class="content">
-              <h3><a href="/">Christie’s Ended Up Selling For $69 Million In Nft
-                Marketplace</a></h3>
-              <ul>
-                <li>June 9, 2021</li>
-                <li>03 Comments</li>
-              </ul>
             </div>
           </div>
         </div>

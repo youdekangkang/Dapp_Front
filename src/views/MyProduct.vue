@@ -4,13 +4,13 @@
   <div class="inner-banner inner-bg5">
     <div class="container">
       <div class="inner-title">
-        <h3>Browse Your Unsold Items</h3>
+        <h3>Browse Your Items</h3>
         <ul>
           <li>
-            <a href="index.html">Home</a>
+            <a href="/">Home</a>
           </li>
-          <li>Trading</li>
-          <li>My Product</li>
+          <li>Upload</li>
+          <li>Find My Assets</li>
         </ul>
         <div class="inner-shape">
           <img src="@/assets/images/inner-banner/inner-shape1.png" alt="Images">

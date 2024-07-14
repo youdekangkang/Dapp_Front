@@ -5,8 +5,9 @@
         <h3>Create Collection</h3>
         <ul>
           <li>
-            <a href="index.html">Home</a>
+            <a href="/">Home</a>
           </li>
+          <li>Upload</li>
           <li>Create Collection</li>
         </ul>
         <div class="inner-shape">

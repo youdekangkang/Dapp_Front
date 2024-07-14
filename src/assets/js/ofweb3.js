@@ -2,20 +2,20 @@
 /* eslint-disable no-undef */
 
 import Fun from './function.js';
-import ecommerce_store_artifacts from '../build/contracts/EcommerceStore.json';
-import asset_manager_artifacts from '../build/contracts/AssetManager.json';
+import ecommerce_store_artifacts from '../../../../build/contracts/ChickEtherealStore.json';
+import asset_manager_artifacts from '../../../../build/contracts/AssetManager.json';
 
+import $ from 'jquery';
 import Web3 from 'web3';
 import { create } from 'ipfs-http-client';
 // const ipfs = create({ host: 'localhost', port: '5001', protocol: 'http' });
 // const web3 = new Web3(Web3.givenProvider || 'http://localhost:8545');
 
 // 你的其他代码
-
 export const AppOfWeb3 = {
   web3: null,
   account: null,
-  EcommerceStore: null,
+  ChickEtherealStore: null,
   fun: new Fun(),
   start: async function () {
     const { web3 } = this;
@@ -23,14 +23,14 @@ export const AppOfWeb3 = {
       // get contract instance
       const networkId = await web3.eth.net.getId();
       const deployedNetwork = ecommerce_store_artifacts.networks[networkId];
-      this.EcommerceStore = new web3.eth.Contract(
+      this.ChickEtherealStore = new web3.eth.Contract(
           ecommerce_store_artifacts.abi,
           deployedNetwork.address,
       );
       // get accounts
       const accounts = await web3.eth.getAccounts();
       this.account = accounts[0];
-      this.subscibeProduct();
+      await this.subscribeProduct();
     } catch (error) {
       console.error(error);
     }
@@ -38,7 +38,7 @@ export const AppOfWeb3 = {
   selectOwnAsset: async function () {
     try {
       // 调用 AssetManager 合约的 getAssets 方法
-      const { getAssets } = this.EcommerceStore.methods;
+      const { getAssets } = this.ChickEtherealStore.methods;
 
       // 返回用户拥有的所有资产
       const userAssets = await getAssets(this.account).call();
@@ -65,7 +65,7 @@ export const AppOfWeb3 = {
   },
 
   buildAsset: async function (assetId) {
-    const { getAssetName, getAssetCreationTime,getSaleStatus } = this.EcommerceStore.methods;
+    const { getAssetName, getAssetCreationTime,getSaleStatus } = this.ChickEtherealStore.methods;
     let assetName = await getAssetName(assetId).call();
     let creationTime = await getAssetCreationTime(assetId).call();
     let asset_status = await getSaleStatus(assetId).call();
@@ -88,9 +88,9 @@ export const AppOfWeb3 = {
   },
 
   // buildAsset: async function(userAssets) {
-  //   const {getAssetName} = this.EcommerceStore.methods;
-  //   const {getAssetCreationTime} = this.EcommerceStore.methods;
-  //   const {getSaleStatus} = this.EcommerceStore.methods;
+  //   const {getAssetName} = this.ChickEtherealStore.methods;
+  //   const {getAssetCreationTime} = this.ChickEtherealStore.methods;
+  //   const {getSaleStatus} = this.ChickEtherealStore.methods;
   //
   //   let asset_name = await getAssetName(userAssets).call()
   //   let creation_time = await getAssetCreationTime(userAssets).call()
@@ -113,7 +113,7 @@ export const AppOfWeb3 = {
   // },
 
   getAssetNameAndImageHash: async function(){
-    const {getAssets,getAssetName} = this.EcommerceStore.methods;
+    const {getAssets,getAssetName} = this.ChickEtherealStore.methods;
 
     var userAssets = await getAssets(this.account).call();
 
@@ -130,8 +130,8 @@ export const AppOfWeb3 = {
   },
 
   // updateAssetHash: async function() {
-  //   const {getAssets} = this.EcommerceStore.methods;
-  //   const {getAssetName} = this.EcommerceStore.methods;
+  //   const {getAssets} = this.ChickEtherealStore.methods;
+  //   const {getAssetName} = this.ChickEtherealStore.methods;
   //
   //   var userAssets = await getAssets(this.account).call();
   //   var productNameSelect = document.getElementById('product-name');
@@ -155,7 +155,7 @@ export const AppOfWeb3 = {
   // },
 
   updateAssetHash: async function() {
-    const {getAssets,getAssetName,getSaleStatus} = this.EcommerceStore.methods;
+    const {getAssets,getAssetName,getSaleStatus} = this.ChickEtherealStore.methods;
 
     var userAssets = await getAssets(this.account).call();
     let assetStatus;
@@ -185,6 +185,15 @@ export const AppOfWeb3 = {
     }
   },
 
+// 添加商品
+//   saveProduct: async function (reader, decodedParams) {
+//     let imageId, descId;
+//     let that = this;
+//     that.fun.saveTextBlobOnIpfs(decodedParams["product-description"]).then(function (id) {
+//       descId = id;
+//       AppOfWeb3.saveProductToBlockchain(decodedParams, descId);
+//     })
+//   },
 
   saveProduct: async function (reader, decodedParams) {
     if (decodedParams["asset-status"] === 'Selling'){
@@ -215,21 +224,32 @@ export const AppOfWeb3 = {
     let auctionStartTime = Date.parse(params["product-auction-start"]) / 1000;
     let auctionEndTime = auctionStartTime + parseInt(params["product-auction-end"]) * 24 * 60 * 60;
 
-    const { addProductToStore } = this.EcommerceStore.methods;
-    await addProductToStore(params["product-name"], params["product-category"], params["asset-hash"], descId, auctionStartTime,
+    const { addTransactionToStore } = this.ChickEtherealStore.methods;
+    console.log("saving to blockchain")
+    await addTransactionToStore(params["product-name"], params["product-category"], params["asset-hash"], descId, auctionStartTime,
         auctionEndTime, params["product-price"])
         .send({ from: this.account, gas: 999999,
-          gasPrice: Web3.utils.toWei('10', 'gwei')}).then(console.log);
-    // let that = this;
-    console.log(params);
-    // await that.fun.saveProductNew(params,descId,auctionStartTime,auctionEndTime);
+          gasPrice: Web3.utils.toWei('10', 'gwei')}).then(
+              console.log("dame")
+        )
+    ;
+    const { transactionIndex } = this.ChickEtherealStore.methods;
+    await transactionIndex().call().then(value=>{
+      console.log(value)
+      let that = this;
+      that.fun.saveProductNew(params,descId,auctionStartTime,auctionEndTime,value.toString());
+    })
+
     alert("Your product was successfully added to your store!");
+    // let that = this;
+    console.log(params,descId,auctionStartTime,auctionEndTime);
+    // await that.fun.saveProductNew(params);
     // location.assign("/mine");
   },
 
   // 添加商品到区块链不竞拍
   saveProductToBlockchainWithoutAuction: async function (imageId, params) {
-    const { addAsset } = this.EcommerceStore.methods;
+    const { addAsset } = this.ChickEtherealStore.methods;
 
     await addAsset(imageId, params["productName"])
         .send({ from: this.account, gas: 999999,
@@ -239,17 +259,17 @@ export const AppOfWeb3 = {
   },
 
   //获取商品状态
-  getProductInfo: async function (productId) {
-    const { getProduct } = this.EcommerceStore.methods;
-    const res = await getProduct(productId).call();
+  getTransactionInfoInfo: async function (productId) {
+    const { getTransactionInfo } = this.ChickEtherealStore.methods;
+    const res = await getTransactionInfo(productId).call();
     return res;
   },
 
 
   // 商品详情
   // renderProductDetails: async function (productId) {
-  //   const { getProduct } = this.EcommerceStore.methods;
-  //   await getProduct(productId).call().then(res => {
+  //   const { getTransactionInfo } = this.ChickEtherealStore.methods;
+  //   await getTransactionInfo(productId).call().then(res => {
   //     console.log(productId,typeof productId);
   //     return res;
   //     let content = ipfs.cat(res[4]);
@@ -281,21 +301,21 @@ export const AppOfWeb3 = {
 
   // 出价
   bidProduct: async function (productId, sealedBid, sendAmount) {
-    const { bid } = this.EcommerceStore.methods;
+    const { bid } = this.ChickEtherealStore.methods;
     await bid(productId, sealedBid).send({ value: this.web3.utils.toWei(sendAmount, 'ether'), from: this.account,
                                         gasPrice: Web3.utils.toWei('10', 'gwei')}).then(res => {
-      alert("Your bid has been successfully submitted!");
+      console.log("Your bid has been successfully submitted!");
       console.log(res);
     })
   },
 
   // 揭示报价
   revealProduct: async function (productId, amount, secretText) {
-    const { revealBid } = this.EcommerceStore.methods;
+    const { revealBid } = this.ChickEtherealStore.methods;
     let amounts = this.web3.utils.toWei(amount, 'ether');
     await revealBid(productId, amounts, secretText).send({ from: this.account,
                                                         gasPrice: Web3.utils.toWei('10', 'gwei')}).then(res => {
-      alert("Your bid has been successfully revealed!");
+      console.log("Your bid has been successfully revealed!");
       console.log(res);
     })
   },
@@ -303,11 +323,11 @@ export const AppOfWeb3 = {
   // 托管
   finalizeProduct: async function (productId) {
     console.log(productId);
-    const { finalizeAuction } = this.EcommerceStore.methods;
+    const { finalizeAuction } = this.ChickEtherealStore.methods;
     await finalizeAuction(productId).send({ from: this.account,
                                         gasPrice: Web3.utils.toWei('10', 'gwei')}).then(res => {
 
-      alert("The auction has been finalized and winner declared.");
+     alert("The auction has been finalized and winner declared.");
       console.log(res);
       location.reload();
     }).catch(err => {
@@ -318,41 +338,39 @@ export const AppOfWeb3 = {
 
   // 最终竞拍人
   highestBidder: async function (productId) {
-    const { highestBidderInfo } = this.EcommerceStore.methods;
+    const { highestBidderInfo } = this.ChickEtherealStore.methods;
     await highestBidderInfo(productId).call().then(res => {
       if (res[2].toLocaleString() == '0') {
-        return "Auction has ended. No bids were revealed"
+        alert("Auction has ended. No bids were revealed");
       } else {
-        return "Auction has ended. Product sold to " + res[0] + " for Ξ:" + this.web3.utils.fromWei(res[2], 'ether') +
+        alert("Auction has ended. Product sold to " + res[0] + " for Ξ:" + this.web3.utils.fromWei(res[2], 'ether') +
             "The money is in the escrow. Two of the three participants (Buyer, Seller and Arbiter) have to " +
-            "either release the funds to seller or refund the money to the buyer"
+            "either release the funds to seller or refund the money to the buyer");
       }
     })
   },
 
   // 托管合约信息
   escrowData: async function (productId) {
-    const { escrowInfo } = this.EcommerceStore.methods;
-    await escrowInfo(productId).call().then(res => {
-      let buyer = 'Buyer: ' + res[0];
-      let seller = 'Seller: ' + res[1];
-      let arbiter = 'Arbiter: ' + res[2];
-      let releaseCount = '';
-      let refundCount = '';
+    const { getEscrowContractInfo } = this.ChickEtherealStore.methods;
+    return await getEscrowContractInfo(productId).call().then(res => {
+      console.log('Buyer: ' + res[0]);
+      console.log('Seller: ' + res[1]);
+      console.log('Arbiter: ' + res[2]);
       if (res[3] == true) {
-        releaseCount = "Amount from the escrow has been released";
+        alert("Amount from the escrow has been released");
       } else {
-        releaseCount =  res[4] + " of 3 participants have agreed to release funds";
-        refundCount = res[5] + " of 3 participants have agreed to refund the buyer";
+        alert(res[4] + " of 3 participants have agreed to release funds");
+        alert(res[5] + " of 3 participants have agreed to refund the buyer");
       }
-      return [buyer,seller,arbiter,releaseCount,refundCount];
+      return res;
     })
   },
 
   // 释放给卖家
   releaseFunds: async function (productId) {
-    const { releaseAmountToSeller } = this.EcommerceStore.methods;
-    await releaseAmountToSeller(productId).send({ from: this.account, gasPrice: Web3.utils.toWei('10', 'gwei')}).then(res => {
+    const { releaseMoneyToSeller } = this.ChickEtherealStore.methods;
+    await releaseMoneyToSeller(productId).send({ from: this.account, gasPrice: Web3.utils.toWei('10', 'gwei')}).then(res => {
       console.log(res);
       location.reload();
       return res;
@@ -361,8 +379,8 @@ export const AppOfWeb3 = {
 
   // 回退给买家
   refundFunds: async function (productId) {
-    const { refundAmountToBuyer } = this.EcommerceStore.methods;
-    await refundAmountToBuyer(productId).send({ from: this.account, gasPrice: Web3.utils.toWei('10', 'gwei')}).then(res => {
+    const { refundMoneyToBuyer } = this.ChickEtherealStore.methods;
+    await refundMoneyToBuyer(productId).send({ from: this.account, gasPrice: Web3.utils.toWei('10', 'gwei')}).then(res => {
       console.log(res);
       location.reload();
       return res;
@@ -371,16 +389,16 @@ export const AppOfWeb3 = {
 
   // 获取密文
   keccakWithamountAndsecretText: async function (amount, secretText) {
-    const { keccak } = this.EcommerceStore.methods;
+    const { keccak } = this.ChickEtherealStore.methods;
     amount = this.web3.utils.toWei(amount, 'ether');
     var sealedBid = await keccak(amount, secretText).call();
     return sealedBid;
   },
 
   // 订阅商品添加
-  subscibeProduct: async function () {
+  subscribeProduct: async function () {
     var that = this;
-    this.EcommerceStore.events.NewProduct({
+    this.ChickEtherealStore.events.NewTransaction({
       fromBlock: 'latest'
     }, function (error, result) {
       // 结果包含 非索引参数 以及 主题 topic
@@ -389,24 +407,8 @@ export const AppOfWeb3 = {
         return;
       }
       var product = result.returnValues;
-      // that.fun.saveProduct(product);
-      console.log("saving to database now...")
-      let data = {
-        blockchainId: product._productId, name: product._name, category: product._category,
-        ipfsImageHash: product._imageId, ipfsDescHash: product._descLink, auctionStartTime: product._auctionStartTime,
-        auctionEndTime: product._auctionEndTime, price: product._startPrice, productStatus: 0
-      };
-      let product_ = JSON.stringify(data);
-      $.ajax({
-        type: 'POST',
-        url: '/product/saveProduct',
-        contentType: 'application/json;charset=UTF-8',
-        data: product_
-      });
-
-
+      that.fun.saveProduct(product);
     });
   },
-
 };
 
